@@ -1,0 +1,17 @@
+name: "Check for TSL updates"
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 4 * * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: pip3 install yq
+    - run: git config user.name "github-actions"
+    - run: git config user.email "github-actions@github.com"
+    - run: ./update.sh | tee /tmp/commit
+    - run: if git commit -a -F /tmp/commit; then git push; fi
